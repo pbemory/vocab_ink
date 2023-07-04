@@ -1,29 +1,30 @@
 #!/usr/bin/env node
 import React from 'react';
-import {render} from 'ink';
+import { render } from 'ink';
 import meow from 'meow';
 import App from './app.js';
 
 const cli = meow(
-	`
+  `
 	Usage
 	  $ vocab_ink
 
 	Options
-		--name  Your name
+		--add, -a new words to add to the word bank.
 
 	Examples
-	  $ vocab_ink --name=Jane
-	  Hello, Jane
+	  $ vocab_ink --add objurgate, mollify, globose
 `,
-	{
-		importMeta: import.meta,
-		flags: {
-			name: {
-				type: 'string',
-			},
-		},
-	},
+  {
+    importMeta: import.meta,
+    flags: {
+      add: {
+        type: 'string',
+        alias: 'a',
+        isMultiple: true,
+      },
+    },
+  },
 );
 
-render(<App name={cli.flags.name} />);
+render(<App add={cli.flags.add} />);

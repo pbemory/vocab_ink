@@ -1,14 +1,18 @@
 import React from 'react';
-import {Text} from 'ink';
+import { Text } from 'ink';
 
 type Props = {
-	name: string | undefined;
+  add?: string[] | undefined;
 };
 
-export default function App({name = 'Stranger'}: Props) {
-	return (
-		<Text>
-			Hello, <Text color="green">{name}</Text>
-		</Text>
-	);
+export default function App({ add }: Props) {
+  return (
+    <>
+    {add?.map((word) => (
+      <Text>
+        Hello, <Text color="green">{word}</Text>
+      </Text>
+    ))}
+    </>
+  )
 }
