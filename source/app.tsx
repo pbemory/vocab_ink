@@ -1,6 +1,6 @@
 import React from 'react';
 import { appendFileSync } from 'fs';
-import WordAdded from './components/wordAdded.js';
+import WordAdded from './components/WordAdded.js';
 
 type Props = {
   add?: string[] | undefined;
@@ -22,9 +22,9 @@ export default function App({ add }: Props) {
     return (
       <>
         {add?.map((word) => (
-          <div key={word}>
-            <WordAdded word={word} />
-          </div>
+          <WordAdded
+            word={word}
+          />
         ))}
       </>
     )
