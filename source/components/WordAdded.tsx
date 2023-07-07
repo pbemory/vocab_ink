@@ -5,11 +5,11 @@ type Props = {
   word: string;
 }
 
-export default function WordAdded({ word }: Props) {
+export default function WordAdded({ word}: Props) {
   return (
     <>
       <Text>
-        <Text bold color="greenBright">{word}</Text> added to word bank!
+        <Text bold color="green">✔</Text> {word}
       </Text>
     </>
   )

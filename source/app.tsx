@@ -1,6 +1,7 @@
 import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
+import { launch } from './helpers.js';
 
 type Props = {
   add?: string[] | undefined;
@@ -12,7 +13,7 @@ export default function App({ add }: Props) {
       add?.map((word) => {
         const row = `${word},0\n`
         try {
-          //fs is considering pwd as vocab_ink/
+          //fs considers vocab_ink/ the current dir
           appendFileSync('../word_bank.csv', row);
         } catch (err) {
           console.error(err);
@@ -24,6 +25,7 @@ export default function App({ add }: Props) {
         {add?.map((word) => (
           <WordAdded
             word={word}
+            key={word}
           />
         ))}
       </>
