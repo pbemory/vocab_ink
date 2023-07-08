@@ -2,6 +2,7 @@ import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
 import { launch } from './helpers.js';
+import { Text } from 'ink';
 
 type Props = {
   add?: string[] | undefined;
@@ -32,8 +33,10 @@ export default function App({ add }: Props) {
     )
   }
   else {
+    const mostRecentSunday = launch().toString();
     return (
       <>
+        <Text>{mostRecentSunday}</Text>
       </>
     )
   }
