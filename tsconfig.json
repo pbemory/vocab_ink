@@ -6,4 +6,8 @@
     "noUnusedParameters": false,
 	},
 	"include": ["source"],
+  "baseUrl": "./source",
+  "paths": {
+    "@utils/*": ["./utils/*"],
+  }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
-import { launch } from './helpers.js';
+import { launch, addWordToWordBank } from './helpers.js';
 import { Text } from 'ink';
 
 type Props = {
@@ -12,13 +12,7 @@ export default function App({ add }: Props) {
   if (add && add.length > 0) {
     {
       add?.map((word) => {
-        const row = `${word},0\n`
-        try {
-          //fs considers vocab_ink/ the current dir
-          appendFileSync('../word_bank.csv', row);
-        } catch (err) {
-          console.error(err);
-        }
+        addWordToWordBank(word);
       })
     }
     return (
@@ -33,10 +27,11 @@ export default function App({ add }: Props) {
     )
   }
   else {
-    const mostRecentSunday = launch().toString();
+    // const mostRecentSunday = launch().toString();
+    launch();
     return (
       <>
-        <Text>{mostRecentSunday}</Text>
+        {/* <Text>{mostRecentSunday}</Text> */}
       </>
     )
   }
