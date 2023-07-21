@@ -4,6 +4,7 @@
 		"outDir": "dist",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "esModuleInterop": true,
 	},
 	"include": ["source"],
   "baseUrl": "./source",

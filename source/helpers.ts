@@ -2,6 +2,9 @@ import { appendFileSync, createReadStream } from 'fs';
 import { parse } from 'fast-csv';
 import path, { dirname } from 'path';
 
+//debug via Javascript Debug Terminal:
+// node --loader ts-node/esm source/helpers.ts
+
 export function launch() {
   readHistory();
 }
@@ -15,7 +18,10 @@ export function readHistory() {
   const mostRecentSunday = getMostRecentSunday();
   let rowCounter = 0;
   let checkedThisWeek = true;
-  let wordsRemaining = 0
+  const readHistoryData: ReadHistoryData = {
+    wordsLearnedThisWeek: 0,
+    wordsRemaining: 0
+  }
   createReadStream('./utils/status_db.csv')
     .pipe(parse({ headers: false }))
     .on('error', error => console.error(error))
@@ -26,20 +32,18 @@ export function readHistory() {
           checkedThisWeek = false;
         }
       } else if (rowCounter == 1 && checkedThisWeek) {
-        const wordsLearnedThisWeek = Number(row[1])
+        readHistoryData.wordsLearnedThisWeek = Number(row[1])
       } else if (rowCounter == 2) {
-        wordsRemaining = Number(row[1])
+        readHistoryData.wordsRemaining = Number(row[1])
       }
       rowCounter++;
     })
     .on('end', (rowCount: any) => {
       //console.log(`Parsed ${rowCount} rows`);
       //console.log(rows[81484]?.postcode);
+
     });
-    const readHistoryData: ReadHistoryData = {
-      wordsLearnedThisWeek: wordsRemaining,
-      wordsRemaining: wordsRemaining
-    }
+    console.log(readHistoryData);
     return readHistoryData;
 }
 
@@ -53,9 +57,11 @@ export function getMostRecentSunday() {
 export function addWordToWordBank(word: string) {
   const row = `${word},0\n`
   try {
-    //fs considers vocab_ink/ the current dir
+    //paths are relative to vocab_ink/
     appendFileSync('./utils/word_bank.csv', row);
   } catch (err) {
     console.error(err);
   }
 }
+
+launch();

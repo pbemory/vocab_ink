@@ -2,7 +2,7 @@ import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
 import { launch, addWordToWordBank } from './helpers.js';
-import { Text } from 'ink';
+import { Text, Box } from 'ink';
 
 type Props = {
   add?: string[] | undefined;
@@ -17,6 +17,9 @@ export default function App({ add }: Props) {
     }
     return (
       <>
+      <Box borderStyle="classic" width="25%" justifyContent="center">
+        <Text>Words Added:</Text>
+      </Box>
         {add?.map((word) => (
           <WordAdded
             word={word}
