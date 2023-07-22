@@ -1,12 +1,15 @@
 import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
-import { launch, addWordToWordBank } from './helpers.js';
+import { launch, addWordToWordBank, ReadHistoryData } from './helpers.js';
 import { Text, Box } from 'ink';
+import HistoryDataDisplay from './components/HistoryDataDisplay.js';
 
 type Props = {
   add?: string[] | undefined;
 };
+
+let getReadHistory = await launch();
 
 export default function App({ add }: Props) {
   if (add && add.length > 0) {
@@ -30,11 +33,10 @@ export default function App({ add }: Props) {
     )
   }
   else {
-    // const mostRecentSunday = launch().toString();
-    launch();
+    let readHistoryData: ReadHistoryData = getReadHistory;
     return (
       <>
-        {/* <Text>{mostRecentSunday}</Text> */}
+        <HistoryDataDisplay {...readHistoryData}/>
       </>
     )
   }

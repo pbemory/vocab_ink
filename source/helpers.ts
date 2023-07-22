@@ -1,12 +1,13 @@
-import { appendFileSync, createReadStream } from 'fs';
+import { appendFileSync, createReadStream, ReadStream } from 'fs';
 import { parse } from 'fast-csv';
-import path, { dirname } from 'path';
 
 //debug via Javascript Debug Terminal:
-// node --loader ts-node/esm source/helpers.ts
+//node --loader ts-node/esm source/helpers.ts
 
-export function launch() {
-  readHistory();
+export async function launch() {
+  let getReadHistory = await readHistory();
+  let readHistoryData: ReadHistoryData = getReadHistory;
+  return readHistoryData;
 }
 
 export type ReadHistoryData = {
@@ -14,7 +15,10 @@ export type ReadHistoryData = {
   wordsRemaining: number,
 }
 
-export function readHistory() {
+export async function readHistory() {
+
+  const readable = createReadStream('./utils/status_db.csv', { encoding: 'utf8' });
+  const rawHistoryData = await readHistoryRows(readable);
   const mostRecentSunday = getMostRecentSunday();
   let rowCounter = 0;
   let checkedThisWeek = true;
@@ -22,29 +26,27 @@ export function readHistory() {
     wordsLearnedThisWeek: 0,
     wordsRemaining: 0
   }
-  createReadStream('./utils/status_db.csv')
-    .pipe(parse({ headers: false }))
-    .on('error', error => console.error(error))
-    .on('data', row => {
-      if (rowCounter == 0) {
-        if(new Date(mostRecentSunday) > new Date(row[1])) {
-          const wordsLearnedThisWeek = 0
-          checkedThisWeek = false;
-        }
-      } else if (rowCounter == 1 && checkedThisWeek) {
-        readHistoryData.wordsLearnedThisWeek = Number(row[1])
-      } else if (rowCounter == 2) {
-        readHistoryData.wordsRemaining = Number(row[1])
+  rawHistoryData.forEach(row => {
+    if (rowCounter == 0) {
+      if (new Date(mostRecentSunday) > new Date(row[1])) {
+        checkedThisWeek = false;
       }
-      rowCounter++;
-    })
-    .on('end', (rowCount: any) => {
-      //console.log(`Parsed ${rowCount} rows`);
-      //console.log(rows[81484]?.postcode);
+    } else if (rowCounter == 1 && checkedThisWeek) {
+      readHistoryData.wordsLearnedThisWeek = Number(row[1])
+    } else if (rowCounter == 2) {
+      readHistoryData.wordsRemaining = Number(row[1])
+    }
+    rowCounter++;
+  });
+  return readHistoryData;
+}
 
-    });
-    console.log(readHistoryData);
-    return readHistoryData;
+async function readHistoryRows(readable: ReadStream) {
+  let data: any[] = [];
+  for await (const row of readable.pipe(parse({ headers: false }))) {
+    data.push(row);
+  }
+  return data;
 }
 
 export function getMostRecentSunday() {
