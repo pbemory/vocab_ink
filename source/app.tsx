@@ -39,12 +39,14 @@ export default function App({ add }: Props) {
           width="75%"
           justifyContent="center"
         >
-          {add?.map((word) => (
-            <WordAdded
-              word={word}
-              key={word}
-            />
-          ))}
+          <Text>
+            {add?.map((word) => (
+                <WordAdded
+                  word={word}
+                  key={word}
+                />
+            ))}
+          </Text>
         </Box>
       </>
     )

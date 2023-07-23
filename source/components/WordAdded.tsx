@@ -7,20 +7,19 @@ type Props = {
 
 export default function WordAdded({ word }: Props) {
   return (
-    <>
-      <Text>
-        <Text
-          bold
-          color="greenBright"
-        >
-          ✔ {''}
-        </Text>
-        <Text
-          color="whiteBright"
-        >
-         {word}
-        </Text>
+    <Text>
+      <Text
+        bold
+        color="greenBright"
+      >
+        ✔ {''}
       </Text>
-    </>
+      <Text
+        color="whiteBright"
+      >
+        {word}
+      </Text>
+      <Newline/>
+    </Text>
   )
 }
