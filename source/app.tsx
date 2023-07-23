@@ -2,14 +2,14 @@ import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
 import { launch, addWordToWordBank, ReadHistoryData } from './helpers.js';
-import { Text, Box } from 'ink';
+import { Text, Box, Newline } from 'ink';
 import HistoryDataDisplay from './components/HistoryDataDisplay.js';
+
+let getReadHistory = await launch();
 
 type Props = {
   add?: string[] | undefined;
 };
-
-let getReadHistory = await launch();
 
 export default function App({ add }: Props) {
   if (add && add.length > 0) {
@@ -20,15 +20,32 @@ export default function App({ add }: Props) {
     }
     return (
       <>
-      <Box borderStyle="classic" width="25%" justifyContent="center">
-        <Text>Words Added:</Text>
-      </Box>
-        {add?.map((word) => (
-          <WordAdded
-            word={word}
-            key={word}
-          />
-        ))}
+        <Box
+          borderStyle="round"
+          borderColor="green"
+          width="75%"
+          justifyContent="center"
+        >
+          <Text
+            bold
+            color="greenBright"
+          >
+            WORDS ADDED:
+          </Text>
+        </Box>
+        <Box
+          borderStyle="round"
+          borderColor="green"
+          width="75%"
+          justifyContent="center"
+        >
+          {add?.map((word) => (
+            <WordAdded
+              word={word}
+              key={word}
+            />
+          ))}
+        </Box>
       </>
     )
   }
@@ -36,7 +53,7 @@ export default function App({ add }: Props) {
     let readHistoryData: ReadHistoryData = getReadHistory;
     return (
       <>
-        <HistoryDataDisplay {...readHistoryData}/>
+        <HistoryDataDisplay {...readHistoryData} />
       </>
     )
   }

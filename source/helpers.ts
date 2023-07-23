@@ -1,5 +1,5 @@
-import { appendFileSync, createReadStream, ReadStream } from 'fs';
-import { parse } from 'fast-csv';
+import { appendFileSync, createReadStream, createWriteStream, ReadStream } from 'fs';
+import { parse, format } from 'fast-csv';
 
 //debug via Javascript Debug Terminal:
 //node --loader ts-node/esm source/helpers.ts
@@ -52,7 +52,7 @@ async function readHistoryRows(readable: ReadStream) {
 export function getMostRecentSunday() {
   const today = new Date();
   const todayAsInt = today.getDay();
-  const most_recent_sunday = (todayAsInt == 0) ? today : new Date(today.getFullYear(), today.getMonth(), today.getDate() - todayAsInt).toLocaleDateString();
+  const most_recent_sunday = (todayAsInt == 0) ? new Date(today.getFullYear(), today.getMonth(), today.getDate()).toLocaleDateString() : new Date(today.getFullYear(), today.getMonth(), today.getDate() - todayAsInt).toLocaleDateString();
   return most_recent_sunday;
 }
 
@@ -66,4 +66,14 @@ export function addWordToWordBank(word: string) {
   }
 }
 
-launch();
+export function save(wordBankPath: string, wordsLearnedThisWeek: number, wordsRemaining: number) {
+  const statusDBPath = './utils/status_db.csv';
+  const writable = createWriteStream(statusDBPath, { encoding: 'utf8' });
+  const stream = format({ headers:true });
+  stream.pipe(writable);
+  stream.write(["Date of last checked Sunday", String(getMostRecentSunday())]);
+  stream.write(["Words learned since Sunday", String(wordsLearnedThisWeek)]);
+  stream.write(["Words remaining", String(wordsRemaining)]);
+  stream.end();
+  //TODO: fs . replace _tmp with .csv
+}
