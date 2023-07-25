@@ -3,9 +3,10 @@ import { Newline, Text } from 'ink';
 
 type Props = {
   word: string;
+  lastWord?: string;
 }
 
-export default function WordAdded({ word }: Props) {
+export default function WordAdded({ word, lastWord }: Props) {
   return (
     <Text>
       <Text
@@ -17,9 +18,8 @@ export default function WordAdded({ word }: Props) {
       <Text
         color="whiteBright"
       >
-        {word}
+        {word}{word != lastWord ? "\n" : ""}
       </Text>
-      <Newline/>
     </Text>
   )
 }

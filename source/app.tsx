@@ -41,10 +41,11 @@ export default function App({ add }: Props) {
         >
           <Text>
             {add?.map((word) => (
-                <WordAdded
-                  word={word}
-                  key={word}
-                />
+              <WordAdded
+                word={word}
+                key={word}
+                lastWord={add[add.length-1]}
+              />
             ))}
           </Text>
         </Box>
