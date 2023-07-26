@@ -1,11 +1,11 @@
 import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
-import { launch, addWordToWordBank, ReadHistoryData } from './helpers.js';
-import { Text, Box, Newline } from 'ink';
+import { getReadHistory, addWordToWordBank, ReadHistoryData} from './helpers.js';
+import { Text, Box} from 'ink';
 import HistoryDataDisplay from './components/HistoryDataDisplay.js';
 
-let getReadHistory = await launch();
+let readHistory = await getReadHistory();
 
 type Props = {
   add?: string[] | undefined;
@@ -53,7 +53,7 @@ export default function App({ add }: Props) {
     )
   }
   else {
-    let readHistoryData: ReadHistoryData = getReadHistory;
+    let readHistoryData: ReadHistoryData = readHistory;
     return (
       <>
         <HistoryDataDisplay {...readHistoryData} />

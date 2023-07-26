@@ -4,10 +4,13 @@ import { parse, format } from 'fast-csv';
 //debug via Javascript Debug Terminal:
 //node --loader ts-node/esm source/helpers.ts
 
-export async function launch() {
+export async function getReadHistory() {
   let getReadHistory = await readHistory();
-  let readHistoryData: ReadHistoryData = getReadHistory;
-  return readHistoryData;
+  return getReadHistory;
+}
+
+export async function runExercise(readHistory:ReadHistoryData){
+
 }
 
 export type ReadHistoryData = {
