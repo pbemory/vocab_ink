@@ -39,6 +39,8 @@ function buildAxiosInstances(word: string) {
 
 async function fetchDefinitionAndExample(instances: any[]) {
 
+  return new Promise((resolve,reject)=> {
+
   let wordResult: WordResult = {
     definition: '',
     example: ''
@@ -82,9 +84,11 @@ async function fetchDefinitionAndExample(instances: any[]) {
           wordResult.definition = wordDef;
         }
       })
-      return wordResult;
+      return resolve(wordResult);
     })
-    .catch(error => console.log(error))
+    .catch(error => reject(error))
+
+  });
 }
 
 async function testResults() {
