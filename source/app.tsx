@@ -1,11 +1,12 @@
 import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
-import { getReadHistory, addWordToWordBank, ReadHistoryData} from './helpers.js';
-import { Text, Box} from 'ink';
+import ExerciseQuestion from './components/ExerciseQuestion.js';
+import { getReadHistory, addWordToWordBank, ReadHistoryData } from './helpers.js';
+import { Text, Box, render } from 'ink';
 import HistoryDataDisplay from './components/HistoryDataDisplay.js';
 
-let readHistory = await getReadHistory();
+let readHistory: ReadHistoryData = await getReadHistory();
 
 type Props = {
   add?: string[] | undefined;
@@ -44,7 +45,7 @@ export default function App({ add }: Props) {
               <WordAdded
                 word={word}
                 key={word}
-                lastWord={add[add.length-1]}
+                lastWord={add[add.length - 1]}
               />
             ))}
           </Text>
@@ -53,10 +54,14 @@ export default function App({ add }: Props) {
     )
   }
   else {
-    let readHistoryData: ReadHistoryData = readHistory;
+    let testArray = ['firstWord','secondWord'];
     return (
       <>
-        <HistoryDataDisplay {...readHistoryData} />
+        <HistoryDataDisplay {...readHistory} />
+        {/* {testArray.map((word)=>{
+          <ExerciseQuestion word={word}/>
+        })} */}
+        <ExerciseQuestion word={'test'}/>
       </>
     )
   }

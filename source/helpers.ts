@@ -4,10 +4,6 @@ import { parse, format } from 'fast-csv';
 //debug via Javascript Debug Terminal:
 //node --loader ts-node/esm source/helpers.ts
 
-export async function getReadHistory() {
-  let getReadHistory = await readHistory();
-  return getReadHistory;
-}
 
 export async function runExercise(readHistory:ReadHistoryData){
 
@@ -18,7 +14,7 @@ export type ReadHistoryData = {
   wordsRemaining: number,
 }
 
-export async function readHistory() {
+export async function getReadHistory() {
 
   const readable = createReadStream('./utils/status_db.csv', { encoding: 'utf8' });
   const rawHistoryData = await readHistoryRows(readable);
