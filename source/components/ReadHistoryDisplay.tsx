@@ -2,7 +2,7 @@ import React from "react";
 import { ReadHistoryData } from "../helpers.js";
 import { Text, Box, Newline } from 'ink';
 
-export default function HistoryDataDisplay({ wordsLearnedThisWeek, wordsRemaining }: ReadHistoryData) {
+export default function ReadHistoryDisplay({ wordsLearnedThisWeek, wordsRemaining }: ReadHistoryData) {
   return (
     <>
       <Box

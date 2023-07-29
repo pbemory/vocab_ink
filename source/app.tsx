@@ -2,9 +2,10 @@ import React from 'react';
 import { appendFileSync } from 'fs';
 import WordAdded from './components/WordAdded.js';
 import Exercise from './components/Exercise.js';
+import ExerciseYN from './components/ExerciseYN.js';
 import { getReadHistory, addWordToWordBank, ReadHistoryData } from './helpers.js';
 import { Text, Box, render } from 'ink';
-import HistoryDataDisplay from './components/HistoryDataDisplay.js';
+import ReadHistoryDisplay from './components/ReadHistoryDisplay.js';
 
 let readHistory: ReadHistoryData = await getReadHistory();
 
@@ -50,13 +51,14 @@ export default function App({ add }: Props) {
             ))}
           </Text>
         </Box>
+        <ExerciseYN/>
       </>
     )
   }
   else {
     return (
       <>
-        <HistoryDataDisplay {...readHistory} />
+        <ReadHistoryDisplay {...readHistory} />
         <Exercise/>
       </>
     )

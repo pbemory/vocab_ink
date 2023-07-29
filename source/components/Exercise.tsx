@@ -25,7 +25,6 @@ export default function Exercise() {
       borderStyle="round"
       borderColor="green"
       width="75%"
-    // justifyContent="center"
     >
       <Box
         marginRight={1}
@@ -41,7 +40,9 @@ export default function Exercise() {
         >
         '{testArray[rowCursor]}'
         </Text>
-        <Text>?</Text>
+        <Text>
+          ?
+        </Text>
       </Box>
       <TextInput
         value={query}
