@@ -6,11 +6,11 @@ const wordsApiHeaderKey = process.env["wordsApiHeaderKey"];
 const wordsApiHeaderHost = process.env["wordsApiHeaderHost"];
 const wordsApiHeaders = { "X-RapidAPI-Key": wordsApiHeaderKey, "X-RapidAPI-Host": wordsApiHeaderHost };
 
-const wordsApiBaseUrl = "https://wordsapiv1.p.rapidapi.com/words/"
-const wordnikApiBaseUrl = "https://api.wordnik.com/v4/word.json/"
-const wordnikParams = { 'api_key': wordnikApiKey, 'limit': '3' }
+export const wordsApiBaseUrl = "https://wordsapiv1.p.rapidapi.com/words/"
+export const wordnikApiBaseUrl = "https://api.wordnik.com/v4/word.json/"
+export const wordnikParams = { 'api_key': wordnikApiKey, 'limit': '3' }
 
-function buildAxiosInstances(word: string) {
+export function buildAxiosInstances(word: string) {
 
   let instances = [];
   const wordsDefUrl = wordsApiBaseUrl + `${word}/definitions`;
@@ -37,7 +37,7 @@ export type WordResult = {
   example: string
 }
 
-async function fetchDefinitionAndExample(instances: AxiosInstance[]) {
+export async function fetchDefinitionAndExample(instances: AxiosInstance[]) {
 
   return new Promise((resolve, reject) => {
 

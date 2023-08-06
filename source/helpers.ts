@@ -17,7 +17,7 @@ export type ReadHistoryData = {
 export async function getReadHistory() {
 
   const readable = createReadStream('./utils/status_db.csv', { encoding: 'utf8' });
-  const rawHistoryData = await readHistoryRows(readable);
+  const rawHistoryData = await readRows(readable);
   const mostRecentSunday = getMostRecentSunday();
   let rowCounter = 0;
   let checkedThisWeek = true;
@@ -40,7 +40,7 @@ export async function getReadHistory() {
   return readHistoryData;
 }
 
-async function readHistoryRows(readable: ReadStream) {
+export async function readRows(readable: ReadStream) {
   let data: any[] = [];
   for await (const row of readable.pipe(parse({ headers: false }))) {
     data.push(row);
@@ -55,7 +55,7 @@ export function getMostRecentSunday() {
   return most_recent_sunday;
 }
 
-export function addWordToWordBank(word: string) {
+export function addNewWordToWordBank(word: string) {
   const row = `${word},0\n`
   try {
     //paths are relative to vocab_ink/
@@ -75,4 +75,12 @@ export function save(wordBankPath: string, wordsLearnedThisWeek: number, wordsRe
   stream.write(["Words remaining", String(wordsRemaining)]);
   stream.end();
   //TODO: fs . replace _tmp with .csv
+}
+
+//credit: Durstenfeldt shuffle
+export function shuffleArray(array:any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  }
 }
