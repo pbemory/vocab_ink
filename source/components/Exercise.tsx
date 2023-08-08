@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, Box, useApp } from 'ink';
+import React, { useEffect, useRef, useState } from 'react';
+import { Text, Box, useApp, Newline } from 'ink';
 import TextInput from 'ink-text-input';
 import { appendFileSync, createReadStream, createWriteStream, ReadStream } from 'fs';
 import { parse, format } from 'fast-csv';
@@ -15,7 +15,7 @@ export default function Exercise() {
   const [currentWordDef, setCurrentWordDef] = useState('loading...');
   const [currentWordEx, setCurrentWordEx] = useState('');
   const [rowCursor, setRowCursor] = useState(0);
-  const [wordBank, setWordBank] = useState<any[]>([]);
+  const wordBankRef = useRef<any[]>([]);
 
 
   useEffect(() => {
@@ -24,12 +24,11 @@ export default function Exercise() {
       const readable = createReadStream('./utils/word_bank.csv', { encoding: 'utf8' });
       let wordBankRows: any[] = await readRows(readable);
       //shuffle it
-      wordBankRows = shuffleArray(wordBankRows);
-
-      const wordInstances: AxiosInstance[] = buildAxiosInstances(wordBankRows[rowCursor][0]);
+      wordBankRef.current = shuffleArray(wordBankRows);
+      //get the word from the word bank + fetch def/example
+      const wordInstances: AxiosInstance[] = buildAxiosInstances(wordBankRef.current[rowCursor][0]);
       const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
       setCurrentWordDef(`'` + wordResults.definition.substring(0, 50) + `'`);
-      setWordBank(wordBankRows);
     }
     getWordBank();
 
@@ -39,7 +38,7 @@ export default function Exercise() {
     //skip on first render
     if (rowCursor > 0) {
       const updateQuestion = async () => {
-        const wordInstances: AxiosInstance[] = buildAxiosInstances(wordBank[rowCursor][0]);
+        const wordInstances: AxiosInstance[] = buildAxiosInstances(wordBankRef.current[rowCursor][0]);
         const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
         setCurrentWordDef(`'` + wordResults.definition.substring(0, 50) + `'`);
       }
@@ -61,6 +60,7 @@ export default function Exercise() {
   }
 
   return (
+    
     <Box
       borderStyle="round"
       borderColor="green"
@@ -70,6 +70,9 @@ export default function Exercise() {
         marginRight={1}
         marginLeft={1}
       >
+        <Text>
+          Question {rowCursor + 1}
+        </Text>
         <Text
         >
           {promptPreText}{' '}
