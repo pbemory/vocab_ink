@@ -60,19 +60,21 @@ export default function Exercise() {
   }
 
   return (
-    
     <Box
       borderStyle="round"
       borderColor="green"
       width="100%"
     >
       <Box
-        marginRight={1}
         marginLeft={1}
       >
         <Text>
-          Question {rowCursor + 1}
+        <Text
+          color="greenBright"
+        >
+          Question {rowCursor + 1}:
         </Text>
+        <Newline/>
         <Text
         >
           {promptPreText}{' '}
@@ -84,14 +86,15 @@ export default function Exercise() {
           {currentWordDef}
         </Text>
         <Text>
-          ?
+          ?{' '}
+        </Text>
+        <TextInput
+          value={query}
+          onChange={setQuery}
+          onSubmit={handleSubmit}
+        />
         </Text>
       </Box>
-      <TextInput
-        value={query}
-        onChange={setQuery}
-        onSubmit={handleSubmit}
-      />
     </Box>
   );
 }
