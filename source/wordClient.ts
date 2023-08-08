@@ -37,7 +37,7 @@ export type WordResult = {
   example: string
 }
 
-export async function fetchDefinitionAndExample(instances: AxiosInstance[]) {
+export async function fetchDefinitionAndExample(instances: AxiosInstance[]):Promise<WordResult> {
 
   return new Promise((resolve, reject) => {
 
@@ -90,10 +90,10 @@ export async function fetchDefinitionAndExample(instances: AxiosInstance[]) {
   });
 }
 
-async function testResults() {
-  const testInstances: AxiosInstance[] = buildAxiosInstances('lovely');
-  const testResults = await fetchDefinitionAndExample(testInstances);
-  console.log(testResults);
-}
+// async function testResults() {
+//   const testInstances: AxiosInstance[] = buildAxiosInstances('lovely');
+//   const testResults = await fetchDefinitionAndExample(testInstances);
+//   console.log(testResults);
+// }
 
-testResults();
+// testResults();

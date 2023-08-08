@@ -29,7 +29,7 @@ export default function ExerciseYN() {
     <Box
       borderStyle="round"
       borderColor="green"
-      width="75%"
+      width="100%"
     >
       <Box
         marginRight={1}

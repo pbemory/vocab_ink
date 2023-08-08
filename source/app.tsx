@@ -25,7 +25,7 @@ export default function App({ add }: Props) {
         <Box
           borderStyle="round"
           borderColor="green"
-          width="75%"
+          width="100%"
           justifyContent="center"
         >
           <Text
@@ -38,7 +38,7 @@ export default function App({ add }: Props) {
         <Box
           borderStyle="round"
           borderColor="green"
-          width="75%"
+          width="100%"
           justifyContent="center"
         >
           <Text>
