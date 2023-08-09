@@ -13,7 +13,7 @@ const cli = meow(
 		--add, -a new words to add to the word bank.
 
 	Examples
-	  $ vocab_ink --add objurgate, mollify, globose
+	  $ vocab_ink -a objurgate -a mollify -a globose
 `,
   {
     importMeta: import.meta,

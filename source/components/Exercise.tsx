@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, Box, useApp, Newline } from 'ink';
+import { Text, Box, useApp, Newline, render } from 'ink';
 import TextInput from 'ink-text-input';
 import { appendFileSync, createReadStream, createWriteStream, ReadStream } from 'fs';
 import { parse, format } from 'fast-csv';
@@ -16,10 +16,11 @@ export default function Exercise() {
   const [currentWordEx, setCurrentWordEx] = useState('');
   const [rowCursor, setRowCursor] = useState(0);
   const wordBankRef = useRef<any[]>([]);
+  const [showExample, setShowExample] = useState("none");
 
 
   useEffect(() => {
-    //load the whole word bank
+
     const getWordBank = async () => {
       const readable = createReadStream('./utils/word_bank.csv', { encoding: 'utf8' });
       let wordBankRows: any[] = await readRows(readable);
@@ -29,6 +30,7 @@ export default function Exercise() {
       const wordInstances: AxiosInstance[] = buildAxiosInstances(wordBankRef.current[rowCursor][0]);
       const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
       setCurrentWordDef(`'` + wordResults.definition.substring(0, 50) + `'`);
+      setCurrentWordEx(`'` + wordResults.example.substring(0, 50) + `'`);
     }
     getWordBank();
 
@@ -41,6 +43,7 @@ export default function Exercise() {
         const wordInstances: AxiosInstance[] = buildAxiosInstances(wordBankRef.current[rowCursor][0]);
         const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
         setCurrentWordDef(`'` + wordResults.definition.substring(0, 50) + `'`);
+        setCurrentWordEx(`'` + wordResults.example.substring(0, 50) + `'`);
       }
       updateQuestion();
     }
@@ -53,8 +56,9 @@ export default function Exercise() {
     }
     else {
       setQuery('');
-      setCurrentWordDef('loading...');
-      setRowCursor(rowCursor + 1);
+      setCurrentWordDef(currentWordEx);
+      //setRowCursor(rowCursor + 1);
+      setShowExample("flex");
     }
 
   }
@@ -69,30 +73,30 @@ export default function Exercise() {
         marginLeft={1}
       >
         <Text>
-        <Text
-          color="greenBright"
-        >
-          Question {rowCursor + 1}:
-        </Text>
-        <Newline/>
-        <Text
-        >
-          {promptPreText}{' '}
-        </Text>
-        <Text
-          bold
-          color="whiteBright"
-        >
-          {currentWordDef}
-        </Text>
-        <Text>
-          ?{' '}
-        </Text>
-        <TextInput
-          value={query}
-          onChange={setQuery}
-          onSubmit={handleSubmit}
-        />
+          <Text
+            color="greenBright"
+          >
+            Question {rowCursor + 1}:
+          </Text>
+          <Newline />
+          <Text
+          >
+            {promptPreText}{' '}
+          </Text>
+          <Text
+            bold
+            color="whiteBright"
+          >
+            {currentWordDef}
+          </Text>
+          <Text>
+            ?{' '}
+          </Text>
+          <TextInput
+            value={query}
+            onChange={setQuery}
+            onSubmit={handleSubmit}
+          />
         </Text>
       </Box>
     </Box>
