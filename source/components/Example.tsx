@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Text, Box, useApp, Newline,} from 'ink';
+import React, { useState } from 'react';
+import { Text, Box, useApp, Newline, render } from 'ink';
 import TextInput from 'ink-text-input';
 
-
-type QuestionProps = {
+type ExampleProps = {
   rowCursor: number,
   setRowCursor: (rowCursor: number) => void,
-  currentWordDef: string,
-  setCurrentWordDef: (currentWordDef:string) => void,
+  currentWordEx: string,
+  setCurrentWordEx: (currentWordDef: string) => void,
   showQuestion: boolean,
-  setShowQuestion: (showQuestion:boolean) => void,
+  setShowQuestion: (showQuestion: boolean) => void,
 }
 
-export default function Question({ rowCursor,setRowCursor,currentWordDef,setCurrentWordDef, showQuestion,setShowQuestion }: QuestionProps) {
+export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion }: ExampleProps) {
+
   const { exit } = useApp();
 
   const [query, setQuery] = useState('');
@@ -23,11 +23,11 @@ export default function Question({ rowCursor,setRowCursor,currentWordDef,setCurr
       exit();
     }
     else {
-      setShowQuestion(false);
       setQuery('');
-      setCurrentWordDef('loading...');
+      setRowCursor(rowCursor + 1);
+      setShowQuestion(true);
     }
-  
+
   }
 
   return (
@@ -43,21 +43,25 @@ export default function Question({ rowCursor,setRowCursor,currentWordDef,setCurr
           <Text
             color="greenBright"
           >
-            Question {rowCursor + 1}:
+            Answer {rowCursor + 1}:
           </Text>
           <Newline />
           <Text
           >
-            What word means{' '}
+            Example:
           </Text>
           <Text
             bold
             color="whiteBright"
           >
-            {currentWordDef}
+            {currentWordEx}
           </Text>
-          <Text>
-            ?{' '}
+          <Text
+            color="greenBright"
+          >
+            <Newline/>
+            <Newline/>
+            {'[Enter] to continue... '}
           </Text>
           <TextInput
             value={query}

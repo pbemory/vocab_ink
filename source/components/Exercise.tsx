@@ -6,6 +6,7 @@ import Question from './Question.js';
 import { AxiosInstance } from 'axios';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import Example from './Example.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +15,7 @@ const __dirname = path.dirname(__filename);
 export default function Exercise() {
 
   const wordBankRef = useRef<any[]>([]);
+  const [showQuestion, setShowQuestion] = useState(true);
   const [rowCursor, setRowCursor] = useState(0);
   const [currentWordDef, setCurrentWordDef] = useState('loading...');
   const [currentWordEx, setCurrentWordEx] = useState('');
@@ -30,7 +32,7 @@ export default function Exercise() {
       const wordInstances: AxiosInstance[] = buildAxiosInstances(wordBankRef.current[rowCursor][0]);
       const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
       setCurrentWordDef(`'` + wordResults.definition.substring(0, 50) + `'`);
-      setCurrentWordEx(`'` + wordResults.example.substring(0, 50) + `'`);
+      setCurrentWordEx(`'` + wordResults.example.substring(0, 75) + `'`);
     }
     getWordBank();
 
@@ -50,11 +52,26 @@ export default function Exercise() {
   }, [rowCursor])
 
   return (
+    <>
+    {showQuestion ? (
     <Question
       rowCursor={rowCursor}
       setRowCursor={setRowCursor}
       currentWordDef={currentWordDef}
       setCurrentWordDef={setCurrentWordDef}
+      showQuestion={showQuestion}
+      setShowQuestion={setShowQuestion}
     />
+    ) : (
+      <Example
+      rowCursor={rowCursor}
+      setRowCursor={setRowCursor}
+      currentWordEx={currentWordEx}
+      setCurrentWordEx={setCurrentWordEx}
+      showQuestion={showQuestion}
+      setShowQuestion={setShowQuestion}
+      />
+    )}
+    </>
   );
 }
