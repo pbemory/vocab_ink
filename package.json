@@ -22,8 +22,10 @@
 		"ink": "^4.1.0",
 		"ink-text-input": "^5.0.1",
 		"meow": "^11.0.0",
+		"path": "^0.12.7",
 		"react": "^18.2.0",
-		"react-devtools": "^4.27.8"
+		"react-devtools": "^4.27.8",
+		"url": "^0.11.1"
 	},
 	"devDependencies": {
 		"@sindresorhus/tsconfig": "^3.0.1",

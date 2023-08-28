@@ -5,24 +5,31 @@ import { appendFileSync, createReadStream, createWriteStream, ReadStream } from 
 import { parse, format } from 'fast-csv';
 import { shuffleArray, readRows } from '../helpers.js';
 import { WordResult, buildAxiosInstances, fetchDefinitionAndExample, wordnikApiBaseUrl, wordnikParams, wordsApiBaseUrl } from '../wordClient.js';
+import Question from './Question.js';
 import { AxiosInstance } from 'axios';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 export default function Exercise() {
   const { exit } = useApp();
+  const wordBankRef = useRef<any[]>([]);
+
+  const [rowCursor, setRowCursor] = useState(0);
   const [query, setQuery] = useState('');
   const [promptPreText, setPromptPreText] = useState('What words means');
   const [currentWordDef, setCurrentWordDef] = useState('loading...');
+  
   const [currentWordEx, setCurrentWordEx] = useState('');
-  const [rowCursor, setRowCursor] = useState(0);
-  const wordBankRef = useRef<any[]>([]);
-  const [showExample, setShowExample] = useState("none");
-
 
   useEffect(() => {
 
     const getWordBank = async () => {
-      const readable = createReadStream('./utils/word_bank.csv', { encoding: 'utf8' });
+      const filePath = path.join(__dirname, '../../utils/word_bank.csv');
+      const readable = createReadStream(filePath, { encoding: 'utf8' });
       let wordBankRows: any[] = await readRows(readable);
       //shuffle it
       wordBankRef.current = shuffleArray(wordBankRows);
@@ -56,49 +63,16 @@ export default function Exercise() {
     }
     else {
       setQuery('');
-      setCurrentWordDef(currentWordEx);
-      //setRowCursor(rowCursor + 1);
-      setShowExample("flex");
+      setCurrentWordDef('loading...');
+      setRowCursor(rowCursor + 1);
     }
 
   }
 
   return (
-    <Box
-      borderStyle="round"
-      borderColor="green"
-      width="100%"
-    >
-      <Box
-        marginLeft={1}
-      >
-        <Text>
-          <Text
-            color="greenBright"
-          >
-            Question {rowCursor + 1}:
-          </Text>
-          <Newline />
-          <Text
-          >
-            {promptPreText}{' '}
-          </Text>
-          <Text
-            bold
-            color="whiteBright"
-          >
-            {currentWordDef}
-          </Text>
-          <Text>
-            ?{' '}
-          </Text>
-          <TextInput
-            value={query}
-            onChange={setQuery}
-            onSubmit={handleSubmit}
-          />
-        </Text>
-      </Box>
-    </Box>
+    <Question
+      rowCursor={rowCursor}
+      
+    />
   );
 }

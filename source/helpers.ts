@@ -1,9 +1,13 @@
 import { appendFileSync, createReadStream, createWriteStream, ReadStream } from 'fs';
 import { parse, format } from 'fast-csv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //debug via Javascript Debug Terminal:
 //node --loader ts-node/esm source/helpers.ts
-
 
 export async function runExercise(readHistory:ReadHistoryData){
 
@@ -15,8 +19,8 @@ export type ReadHistoryData = {
 }
 
 export async function getReadHistory() {
-
-  const readable = createReadStream('./utils/status_db.csv', { encoding: 'utf8' });
+  const filePath = path.join(__dirname, '../utils/status_db.csv');
+  const readable = createReadStream(filePath, { encoding: 'utf8' });
   const rawHistoryData = await readRows(readable);
   const mostRecentSunday = getMostRecentSunday();
   let rowCounter = 0;
@@ -59,14 +63,15 @@ export function addNewWordToWordBank(word: string) {
   const row = `${word},0\n`
   try {
     //paths are relative to vocab_ink/
-    appendFileSync('./utils/word_bank.csv', row);
+    const filePath = path.join(__dirname, '../utils/word_bank.csv');
+    appendFileSync(filePath, row);
   } catch (err) {
     console.error(err);
   }
 }
 
 export function save(wordBankPath: string, wordsLearnedThisWeek: number, wordsRemaining: number) {
-  const statusDBPath = './utils/status_db.csv';
+  const statusDBPath = path.join(__dirname, '../utils/status_db.csv');
   const writable = createWriteStream(statusDBPath, { encoding: 'utf8' });
   const stream = format({ headers:true });
   stream.pipe(writable);
