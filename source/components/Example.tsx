@@ -9,9 +9,10 @@ type ExampleProps = {
   setCurrentWordEx: (currentWordDef: string) => void,
   showQuestion: boolean,
   setShowQuestion: (showQuestion: boolean) => void,
+  currentWord: string
 }
 
-export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion }: ExampleProps) {
+export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion, currentWord }: ExampleProps) {
 
   const { exit } = useApp();
 
@@ -47,8 +48,14 @@ export default function Example({ rowCursor, setRowCursor, currentWordEx, setCur
           </Text>
           <Newline />
           <Text
+            bold
+            color="whiteBright"
           >
-            Example:
+            {currentWord}
+          </Text>
+          <Text
+          >
+            :e.g.:
           </Text>
           <Text
             bold
