@@ -30,10 +30,10 @@ export default function Question({ rowCursor, setRowCursor, currentWordDef, setC
       setQuery('');
       setCurrentWordDef('loading...');
       if (query === currentWord) {
-        setScore((score: any) => [...score, '✔️ '])
+        setScore((score: any) => [...score, ' \u2714'])
       }
       else {
-        setScore((score: any) => [...score, '✖️ '])
+        setScore((score: any) => [...score, ' \u2717'])
       }
     }
   }
@@ -49,9 +49,14 @@ export default function Question({ rowCursor, setRowCursor, currentWordDef, setC
       >
         <Text>
           <Text
-            color="gray"
           >
-            Score:{score.map((point: any) => (point))}
+            Score:{score.map((point: any) => (
+              <Text
+              color={point === ' \u2714' ? 'green': 'red'}
+              >
+                {point}
+              </Text>
+            ))}
           </Text>
           <Newline />
           <Text
