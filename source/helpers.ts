@@ -62,7 +62,6 @@ export function getMostRecentSunday() {
 export function addNewWordToWordBank(word: string) {
   const row = `${word},0\n`
   try {
-    //paths are relative to vocab_ink/
     const filePath = path.join(__dirname, '../utils/word_bank.csv');
     appendFileSync(filePath, row);
   } catch (err) {
@@ -73,7 +72,7 @@ export function addNewWordToWordBank(word: string) {
 export function save(wordBankPath: string, wordsLearnedThisWeek: number, wordsRemaining: number) {
   const statusDBPath = path.join(__dirname, '../utils/status_db.csv');
   const writable = createWriteStream(statusDBPath, { encoding: 'utf8' });
-  const stream = format({ headers:true });
+  const stream = format({ headers:false });
   stream.pipe(writable);
   stream.write(["Date of last checked Sunday", String(getMostRecentSunday())]);
   stream.write(["Words learned since Sunday", String(wordsLearnedThisWeek)]);

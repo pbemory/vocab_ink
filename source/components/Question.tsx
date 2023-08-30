@@ -62,7 +62,7 @@ export default function Question({ rowCursor, setRowCursor, currentWordDef, setC
           <Text
             color="greenBright"
           >
-            Question {rowCursor + 1}:
+            Question {score.length + 1}:
           </Text>
           <Newline />
           <Text

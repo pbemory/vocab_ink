@@ -9,10 +9,13 @@ type ExampleProps = {
   setCurrentWordEx: (currentWordDef: string) => void,
   showQuestion: boolean,
   setShowQuestion: (showQuestion: boolean) => void,
-  currentWord: string
+  currentWord: string,
+  calledFromExample: boolean,
+  setCalledFromExample: (calledFromExample: boolean) => void,
+  score: any,
 }
 
-export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion, currentWord }: ExampleProps) {
+export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion, currentWord, calledFromExample, setCalledFromExample, score }: ExampleProps) {
 
   const { exit } = useApp();
 
@@ -25,10 +28,10 @@ export default function Example({ rowCursor, setRowCursor, currentWordEx, setCur
     }
     else {
       setQuery('');
+      setCalledFromExample(true);
       setRowCursor(rowCursor + 1);
       setShowQuestion(true);
     }
-
   }
 
   return (
@@ -44,7 +47,7 @@ export default function Example({ rowCursor, setRowCursor, currentWordEx, setCur
           <Text
             color="greenBright"
           >
-            Answer {rowCursor + 1}:
+            Answer {score.length}:
           </Text>
           <Newline />
           <Text
