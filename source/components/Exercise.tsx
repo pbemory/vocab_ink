@@ -22,8 +22,8 @@ export default function Exercise() {
   const [currentWord, setCurrentWord] = useState('');
   const [currentWordDef, setCurrentWordDef] = useState('loading...');
   const [currentWordEx, setCurrentWordEx] = useState('');
-  const [score, setScore] = useState<string[]>([]);
-  const [calledFromExample, setCalledFromExmaple] = useState(false);
+  const [score, setScore] = useState<number[]>([]);
+  const [calledFromExample, setCalledFromExample] = useState(false);
 
   useEffect(() => {
 
@@ -33,26 +33,28 @@ export default function Exercise() {
       let wordBankRows: any[] = await readRows(readable);
       //shuffle it
       oldWordBankRef.current = shuffleArray(wordBankRows);
-      let currentWord: any;
-      //every() row but neeed notion of resume from slice(rowCursor)
+      let localWord: any;
       let rowIndex = 0;
-      const findFirstNewWord = (wordBankRow: any) => {
-        if (wordBankRow[1] == '1') {
+      const findNewWord = (wordBankRow: any) => {
+        if (wordBankRow[1].trim() == '1') {
           newWordBankRef.current = [...newWordBankRef.current, wordBankRow];
           rowIndex++;
+          console.log(wordBankRow[0] + " has a 1.")
           return true;
         }
         else {
-          currentWord = oldWordBankRef.current[rowIndex][0];
-          setCurrentWord(currentWord);
-          setRowCursor(rowIndex+1);
+          localWord = oldWordBankRef.current[rowIndex][0];
+          setCurrentWord(localWord);
+          setRowCursor(rowIndex);
+          console.log(wordBankRow[0] + " has a 0.")
+          console.log("We should be at element " + rowIndex);
           return false;
         }
       }
-      oldWordBankRef.current.every(findFirstNewWord);
+      oldWordBankRef.current.every(findNewWord);
   
       //get the word from the word bank + fetch def/example
-      const wordInstances: AxiosInstance[] = buildAxiosInstances(currentWord);
+      const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
       const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
       setCurrentWordDef(`'` + wordResults.definition.substring(0, 150) + `'`);
       setCurrentWordEx(`'` + wordResults.example.substring(0, 150) + `'`);
@@ -64,11 +66,48 @@ export default function Exercise() {
   useEffect(() => {
     //skip on first render
     if (calledFromExample) {
-      //oldWordBankRef.current.slice(rowCursor).every()//
+      setCalledFromExample(false);
+      console.log("What is my score? " + score);
+      console.log("Did I get my last question right? " + score[score?.length-1])
+      if(score[score?.length-1] === 0) {
+        console.log("Getting into truthiness");
+        console.log("This is the row I'm about to mark with 0 " + oldWordBankRef.current[rowCursor-1])
+        const copyWordRowToUpdate = [...oldWordBankRef.current[rowCursor-1]]
+        newWordBankRef.current = [...newWordBankRef.current, copyWordRowToUpdate];
+      }
+      else {
+        console.log("Getting into else.");
+        console.log("This is the row I'm about to mark with 1 " + oldWordBankRef.current[rowCursor-1])
+        const copyWordRowToUpdate = [...oldWordBankRef.current[rowCursor-1]]
+        copyWordRowToUpdate[1] = '1'
+        newWordBankRef.current = [...newWordBankRef.current, copyWordRowToUpdate];
+      }
+      console.log("Old word bank: " + oldWordBankRef.current.slice(0,rowCursor));
+      console.log("New word bank: " + newWordBankRef.current);
+
       const updateQuestion = async () => {
-        const currentWord = oldWordBankRef.current[rowCursor][0];
-        setCurrentWord(currentWord);
-        const wordInstances: AxiosInstance[] = buildAxiosInstances(currentWord);
+
+        let rowIndex = rowCursor;
+        let localWord: any;
+
+        const findNewWord = (wordBankRow: any) => {
+          if (wordBankRow[1].trim() == '1') {
+            newWordBankRef.current = [...newWordBankRef.current, wordBankRow];
+            rowIndex++;
+            return true;
+          }
+          else {
+            console.log("I found a word that is new. Is is: " + wordBankRow[0] + wordBankRow[1])
+            localWord = oldWordBankRef.current[rowIndex][0];
+            setCurrentWord(localWord);
+            setRowCursor(rowIndex);
+            return false;
+          }
+        }
+        
+        oldWordBankRef.current.slice(rowIndex).every(findNewWord);
+
+        const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
         const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
         setCurrentWordDef(`'` + wordResults.definition.substring(0, 150) + `'`);
         setCurrentWordEx(`'` + wordResults.example.substring(0, 150) + `'`);
@@ -102,7 +141,7 @@ export default function Exercise() {
           setShowQuestion={setShowQuestion}
           currentWord={currentWord}
           score={score}
-          setScore={setScore}
+          setScore={setScore}         
         />
       ) : (
         <Example
@@ -114,7 +153,7 @@ export default function Exercise() {
           setShowQuestion={setShowQuestion}
           currentWord={currentWord}
           calledFromExample = {calledFromExample}
-          setCalledFromExample = {setCalledFromExmaple}
+          setCalledFromExample = {setCalledFromExample}
           score={score}
         />
       )}
