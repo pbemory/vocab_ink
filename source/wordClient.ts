@@ -86,7 +86,9 @@ export async function fetchDefinitionAndExample(instances: AxiosInstance[]):Prom
         })
         return resolve(wordResult);
       })
-      .catch(error => reject(error))
+      .catch(error => {
+        reject(error)
+      })
   });
 }
 

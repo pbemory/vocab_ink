@@ -7,7 +7,7 @@ import ReadHistoryDisplay from './ReadHistoryDisplay.js';
 
 let readHistory: ReadHistoryData = await getReadHistory();
 
-export default function ExerciseYN() {
+export default function ExerciseYN({ wordsLearnedThisWeek, wordsRemaining }: ReadHistoryData) {
   const { exit } = useApp();
   const [query, setQuery] = useState('');
 
@@ -20,7 +20,7 @@ export default function ExerciseYN() {
       render(
         <>
           <ReadHistoryDisplay {...readHistory} />
-          <Exercise />
+          <Exercise {...readHistory}/>
         </>
       )
     }

@@ -51,7 +51,7 @@ export default function App({ add }: Props) {
             ))}
           </Text>
         </Box>
-        <ExerciseYN/>
+        <ExerciseYN {...readHistory}/>
       </>
     )
   }
@@ -59,7 +59,7 @@ export default function App({ add }: Props) {
     return (
       <>
         <ReadHistoryDisplay {...readHistory} />
-        <Exercise/>
+        <Exercise {...readHistory}/>
       </>
     )
   }

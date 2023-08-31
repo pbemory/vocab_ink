@@ -9,10 +9,6 @@ const __dirname = path.dirname(__filename);
 //debug via Javascript Debug Terminal:
 //node --loader ts-node/esm source/helpers.ts
 
-export async function runExercise(readHistory:ReadHistoryData){
-
-}
-
 export type ReadHistoryData = {
   wordsLearnedThisWeek: number,
   wordsRemaining: number,
@@ -22,6 +18,7 @@ export async function getReadHistory() {
   const filePath = path.join(__dirname, '../utils/status_db.csv');
   const readable = createReadStream(filePath, { encoding: 'utf8' });
   const rawHistoryData = await readRows(readable);
+  readable.close();
   const mostRecentSunday = getMostRecentSunday();
   let rowCounter = 0;
   let checkedThisWeek = true;
@@ -67,18 +64,6 @@ export function addNewWordToWordBank(word: string) {
   } catch (err) {
     console.error(err);
   }
-}
-
-export function save(wordBankPath: string, wordsLearnedThisWeek: number, wordsRemaining: number) {
-  const statusDBPath = path.join(__dirname, '../utils/status_db.csv');
-  const writable = createWriteStream(statusDBPath, { encoding: 'utf8' });
-  const stream = format({ headers:false });
-  stream.pipe(writable);
-  stream.write(["Date of last checked Sunday", String(getMostRecentSunday())]);
-  stream.write(["Words learned since Sunday", String(wordsLearnedThisWeek)]);
-  stream.write(["Words remaining", String(wordsRemaining)]);
-  stream.end();
-  //TODO: fs . replace _tmp with .csv
 }
 
 //credit: Durstenfeldt shuffle

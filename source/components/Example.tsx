@@ -13,9 +13,10 @@ type ExampleProps = {
   calledFromExample: boolean,
   setCalledFromExample: (calledFromExample: boolean) => void,
   score: any,
+  setUserSaved: (userSaved:boolean) => void
 }
 
-export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion, currentWord, calledFromExample, setCalledFromExample, score }: ExampleProps) {
+export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion, currentWord, calledFromExample, setCalledFromExample, score, setUserSaved }: ExampleProps) {
 
   const { exit } = useApp();
 
@@ -23,8 +24,7 @@ export default function Example({ rowCursor, setRowCursor, currentWordEx, setCur
 
   const handleSubmit = async () => {
     if (query === 'q') {
-      //await save()
-      exit();
+      setUserSaved(true);
     }
     else {
       setQuery('');

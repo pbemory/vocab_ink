@@ -13,17 +13,17 @@ type QuestionProps = {
   currentWord: string,
   score: any,
   setScore: (oldScore: any) => void,
+  setUserSaved: (userSaved:boolean) => void
 }
 
-export default function Question({ rowCursor, setRowCursor, currentWordDef, setCurrentWordDef, showQuestion, setShowQuestion, currentWord, score, setScore }: QuestionProps) {
-  const { exit } = useApp();
+export default function Question({ rowCursor, setRowCursor, currentWordDef, setCurrentWordDef, showQuestion, setShowQuestion, currentWord, score, setScore, setUserSaved}: QuestionProps) {
+
 
   const [query, setQuery] = useState('');
 
   const handleSubmit = async () => {
     if (query === 'q') {
-      //await save()
-      exit();
+      setUserSaved(true);
     }
     else {
       setShowQuestion(false);
