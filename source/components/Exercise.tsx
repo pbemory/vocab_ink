@@ -62,8 +62,8 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
       const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
       const rawWordResults = await fetchDefinitionAndExample(wordInstances);
       const wordResults = await parseDefinitionAndExample(rawWordResults);
-      setCurrentWordDef(`'` + wordResults.definition.substring(0, 150) + `'`);
-      setCurrentWordEx(`'` + wordResults.example.substring(0, 150) + `'`);
+      setCurrentWordDef(`'` + wordResults.definition.substring(0, 250) + `'`);
+      setCurrentWordEx(`'` + wordResults.example.substring(0, 250) + `'`);
     }
     getWordBank();
 
@@ -116,8 +116,8 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
         const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
         const rawWordResults = await fetchDefinitionAndExample(wordInstances);
         const wordResults = await parseDefinitionAndExample(rawWordResults);
-        setCurrentWordDef(`'` + wordResults.definition.substring(0, 150) + `'`);
-        setCurrentWordEx(`'` + wordResults.example.substring(0, 150) + `'`);
+        setCurrentWordDef(`'` + wordResults.definition.substring(0, 250) + `'`);
+        setCurrentWordEx(`'` + wordResults.example.substring(0, 250) + `'`);
       }
       updateQuestion();
     }
