@@ -3,7 +3,7 @@ import { createReadStream, createWriteStream } from 'fs';
 import { stringify } from 'csv-stringify';
 import { Text, Box, useApp } from 'ink';
 import { shuffleArray, readRows, ReadHistoryData, getMostRecentSunday } from '../helpers.js';
-import { WordResult, buildAxiosInstances, fetchDefinitionAndExample } from '../wordClient.js';
+import { WordResult, buildAxiosInstances, fetchDefinitionAndExample, parseDefinitionAndExample } from '../wordClient.js';
 import Question from './Question.js';
 import { AxiosInstance } from 'axios';
 import path from 'path';
@@ -60,7 +60,8 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
 
       //get the word from the word bank + fetch def/example
       const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
-      const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
+      const rawWordResults = await fetchDefinitionAndExample(wordInstances);
+      const wordResults = await parseDefinitionAndExample(rawWordResults);
       setCurrentWordDef(`'` + wordResults.definition.substring(0, 150) + `'`);
       setCurrentWordEx(`'` + wordResults.example.substring(0, 150) + `'`);
     }
@@ -113,7 +114,8 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
         oldWordBankRef.current.slice(rowIndex).every(findNewWord);
 
         const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
-        const wordResults: WordResult = await fetchDefinitionAndExample(wordInstances);
+        const rawWordResults = await fetchDefinitionAndExample(wordInstances);
+        const wordResults = await parseDefinitionAndExample(rawWordResults);
         setCurrentWordDef(`'` + wordResults.definition.substring(0, 150) + `'`);
         setCurrentWordEx(`'` + wordResults.example.substring(0, 150) + `'`);
       }
