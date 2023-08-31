@@ -85,72 +85,20 @@ export async function parseDefinitionAndExample(data: AxiosResponse[]): Promise<
 
 export async function fetchDefinitionAndExample(instances: AxiosInstance[]) {
   let keeptrying = 0;
+  let errorResponses: AxiosResponse[] = [];
   do {
     try {
       return await Promise.all(instances.map((instance: AxiosInstance) => instance.get(instance.defaults.baseURL!)))
     }
-    catch(error:any) {
+    catch (error: any) {
+      if (keeptrying == 2) {
+        errorResponses.push(error.response)
+      }
       keeptrying++;
-      console.log(error.response.status);
     }
   } while (keeptrying < 3)
-  return await Promise.all([]);
+  return await Promise.all(errorResponses);
 }
-
-// export async function fetchDefinitionAndExample(instances: AxiosInstance[]): Promise<WordResult> {
-
-//   return new Promise((resolve, reject) => {
-
-//     let wordResult: WordResult = {
-//       definition: '',
-//       example: ''
-//     }
-
-//     axios.all(instances.map((instance: AxiosInstance) => instance.get(instance.defaults.baseURL!)))
-//       .then((data) => {
-//         data.forEach(response => {
-//           const host = response.request.host;
-//           if (String(host).includes('wordnik')) {
-//             let wordExample = "No example found.";
-//             const exampleKey = 'text'
-//             const errorKey = 'message'
-//             if (errorKey in response.data) {
-//               wordExample = "Error: " + response.data[errorKey];
-//             }
-//             else {
-//               response.data['examples'].every(
-//                 (element: any) => {
-//                   if (exampleKey in element) {
-//                     wordExample = element[exampleKey];
-//                     return false;
-//                   }
-//                   return true;
-//                 }
-//               )
-//             }
-//             wordResult.example = wordExample;
-//           } else {
-//             let wordDef = "No definition found."
-//             const errorKey = 'message';
-//             if (errorKey in response.data) {
-//               wordDef = "Error: " + response.data[errorKey]
-//             }
-//             else {
-//               const definitions = response.data.definitions;
-//               if (definitions.length > 0) {
-//                 wordDef = definitions[0]['definition']
-//               }
-//             }
-//             wordResult.definition = wordDef;
-//           }
-//         })
-//         return resolve(wordResult);
-//       })
-//       .catch(error => {
-//         reject(error)
-//       })
-//   });
-// }
 
 // async function testResults() {
 //   const testInstances: AxiosInstance[] = buildAxiosInstances('lovely');
