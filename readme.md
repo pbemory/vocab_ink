@@ -4,7 +4,7 @@
 
 # usage
 * Run the app:
-
+![](capture.gif)
 * Save and quit by inputting 'q' in the prompt.
 
 * Repo comes with pre-loaded word bank in utils/word_bank.csv. You can add to the word bank or create your own from the command-line.
