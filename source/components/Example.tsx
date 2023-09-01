@@ -6,17 +6,14 @@ type ExampleProps = {
   rowCursor: number,
   setRowCursor: (rowCursor: number) => void,
   currentWordEx: string,
-  setCurrentWordEx: (currentWordDef: string) => void,
-  showQuestion: boolean,
   setShowQuestion: (showQuestion: boolean) => void,
   currentWord: string,
-  calledFromExample: boolean,
   setCalledFromExample: (calledFromExample: boolean) => void,
   score: any,
   setUserSaved: (userSaved:boolean) => void
 }
 
-export default function Example({ rowCursor, setRowCursor, currentWordEx, setCurrentWordEx, showQuestion, setShowQuestion, currentWord, calledFromExample, setCalledFromExample, score, setUserSaved }: ExampleProps) {
+export default function Example({ rowCursor, setRowCursor, currentWordEx,  setShowQuestion, currentWord, setCalledFromExample, score, setUserSaved }: ExampleProps) {
 
   const { exit } = useApp();
 

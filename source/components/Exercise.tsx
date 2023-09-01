@@ -1,20 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createReadStream, createWriteStream } from 'fs';
-import { stringify } from 'csv-stringify';
 import { Text, Box, useApp } from 'ink';
-import { shuffleArray, readRows, ReadHistoryData, getMostRecentSunday, save, updateWordBankFromScore } from '../helpers.js';
-import { WordResult, buildAxiosInstances, fetchDefinitionAndExample, parseDefinitionAndExample } from '../wordClient.js';
+import { shuffleArray, readRows, ReadHistoryData, save, updateWordBankFromScore, findNewWord } from '../helpers.js';
+import { buildFetchParseWordResults } from '../wordClient.js';
 import Question from './Question.js';
-import { AxiosInstance } from 'axios';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import Example from './Example.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-
-export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadHistoryData) {
+export default function Exercise({ wordsLearnedThisWeek }: ReadHistoryData) {
 
   const oldWordBankRef = useRef<any[]>([]);
   const newWordBankRef = useRef<any[]>([]);
@@ -35,26 +27,11 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
       let wordBankRows: any[] = await readRows('../utils/word_bank.csv');
       //shuffle it
       oldWordBankRef.current = shuffleArray(wordBankRows);
-      let localWord: any;
-      let rowIndex = 0;
-      const findNewWord = (wordBankRow: any) => {
-        if (wordBankRow[1].trim() == '1') {
-          newWordBankRef.current = [...newWordBankRef.current, wordBankRow];
-          rowIndex++;
-          return true;
-        }
-        else {
-          localWord = oldWordBankRef.current[rowIndex][0];
-          setCurrentWord(localWord);
-          setRowCursor(rowIndex);
-          return false;
-        }
-      }
-      oldWordBankRef.current.every(findNewWord);
-      //get the word from the word bank + fetch def/example
-      const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
-      const rawWordResults = await fetchDefinitionAndExample(wordInstances);
-      const wordResults = await parseDefinitionAndExample(rawWordResults);
+      const newWordData = findNewWord(oldWordBankRef,newWordBankRef);
+      const {newWord, currentIndex} = newWordData;
+      setCurrentWord(newWord);
+      setRowCursor(currentIndex);
+      const wordResults = await buildFetchParseWordResults(newWord!);
       setCurrentWordDef(`'` + wordResults.definition.substring(0, 250) + `'`);
       setCurrentWordEx(`'` + wordResults.example.substring(0, 250) + `'`);
     }
@@ -67,26 +44,11 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
       setCalledFromExample(false);
       updateWordBankFromScore(score,oldWordBankRef,newWordBankRef,rowCursor);
       const updateQuestion = async () => {
-        let rowIndex = rowCursor;
-        let localWord: any;
-        const findNewWord = (wordBankRow: any) => {
-          if (wordBankRow[1].trim() == '1') {
-            newWordBankRef.current = [...newWordBankRef.current, wordBankRow];
-            rowIndex++;
-            return true;
-          }
-          else {
-            localWord = oldWordBankRef.current[rowIndex][0];
-            setCurrentWord(localWord);
-            setRowCursor(rowIndex);
-            return false;
-          }
-        }
-        oldWordBankRef.current.slice(rowIndex).every(findNewWord);
-
-        const wordInstances: AxiosInstance[] = buildAxiosInstances(localWord);
-        const rawWordResults = await fetchDefinitionAndExample(wordInstances);
-        const wordResults = await parseDefinitionAndExample(rawWordResults);
+        const newWordData = findNewWord(oldWordBankRef,newWordBankRef, rowCursor);
+        const {newWord, currentIndex} = newWordData;
+        setCurrentWord(newWord);
+        setRowCursor(currentIndex);
+        const wordResults = await buildFetchParseWordResults(newWord);
         setCurrentWordDef(`'` + wordResults.definition.substring(0, 250) + `'`);
         setCurrentWordEx(`'` + wordResults.example.substring(0, 250) + `'`);
       }
@@ -120,11 +82,8 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
       </Box>
       {showQuestion ? (
         <Question
-          rowCursor={rowCursor}
-          setRowCursor={setRowCursor}
           currentWordDef={currentWordDef}
           setCurrentWordDef={setCurrentWordDef}
-          showQuestion={showQuestion}
           setShowQuestion={setShowQuestion}
           currentWord={currentWord}
           score={score}
@@ -136,11 +95,8 @@ export default function Exercise({ wordsLearnedThisWeek, wordsRemaining }: ReadH
           rowCursor={rowCursor}
           setRowCursor={setRowCursor}
           currentWordEx={currentWordEx}
-          setCurrentWordEx={setCurrentWordEx}
-          showQuestion={showQuestion}
           setShowQuestion={setShowQuestion}
           currentWord={currentWord}
-          calledFromExample={calledFromExample}
           setCalledFromExample={setCalledFromExample}
           score={score}
           setUserSaved={setUserSaved}

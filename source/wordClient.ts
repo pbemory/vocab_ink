@@ -100,10 +100,9 @@ export async function fetchDefinitionAndExample(instances: AxiosInstance[]) {
   return await Promise.all(errorResponses);
 }
 
-// async function testResults() {
-//   const testInstances: AxiosInstance[] = buildAxiosInstances('lovely');
-//   const testResults = await fetchDefinitionAndExample(testInstances);
-//   console.log(testResults);
-// }
-
-// testResults();
+export async function buildFetchParseWordResults(word: string) {
+  const wordInstances: AxiosInstance[] = buildAxiosInstances(word);
+  const rawWordResults = await fetchDefinitionAndExample(wordInstances);
+  const wordResults = await parseDefinitionAndExample(rawWordResults);
+  return wordResults;
+}

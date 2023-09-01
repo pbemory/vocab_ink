@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 export type ReadHistoryData = {
   wordsLearnedThisWeek: number,
-  wordsRemaining: number,
+  wordsRemaining?: number,
 }
 
 export async function getReadHistory() {
@@ -107,7 +107,23 @@ export async function save(oldWordBankRef: any, newWordBankRef: any, wordsLearne
   dbStringifier.pipe(dbWriteStream);
 
 }
-
+export function findNewWord(oldWordBankRef: any, newWordBankRef: any, currentIndex: number = 0) {
+  let newWordFound: boolean = false;
+  let newWord: string = '';
+  oldWordBankRef.current.forEach((wordBankRow: any) => {
+    if (!newWordFound) {
+      if (wordBankRow[1].trim() == '1') {
+        newWordBankRef.current = [...newWordBankRef.current, wordBankRow];
+        currentIndex++;
+      }
+      else {
+        newWord = oldWordBankRef.current[currentIndex][0];
+        newWordFound = true;
+      }
+    }
+  })
+  return { newWord: newWord, currentIndex: currentIndex }
+}
 //credit: Durstenfeldt shuffle
 export function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {

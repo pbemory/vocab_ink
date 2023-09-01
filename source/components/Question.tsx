@@ -4,11 +4,8 @@ import TextInput from 'ink-text-input';
 
 
 type QuestionProps = {
-  rowCursor: number,
-  setRowCursor: (rowCursor: number) => void,
   currentWordDef: string,
   setCurrentWordDef: (currentWordDef: string) => void,
-  showQuestion: boolean,
   setShowQuestion: (showQuestion: boolean) => void,
   currentWord: string,
   score: any,
@@ -16,8 +13,7 @@ type QuestionProps = {
   setUserSaved: (userSaved:boolean) => void
 }
 
-export default function Question({ rowCursor, setRowCursor, currentWordDef, setCurrentWordDef, showQuestion, setShowQuestion, currentWord, score, setScore, setUserSaved}: QuestionProps) {
-
+export default function Question({ currentWordDef, setCurrentWordDef, setShowQuestion, currentWord, score, setScore, setUserSaved}: QuestionProps) {
 
   const [query, setQuery] = useState('');
 
